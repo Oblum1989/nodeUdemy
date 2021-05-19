@@ -2,6 +2,16 @@ const http = require('http');
 const url = require('url');
 const { StringDecoder } = require('string_decoder');
 
+let resources = {
+  mascotas: [
+    {type: 'perro', name: 'coraje', owner: 'oscar'},
+    {type: 'perro', name: 'coraje', owner: 'oscar'},
+    {type: 'perro', name: 'coraje', owner: 'oscar'},
+    {type: 'perro', name: 'coraje', owner: 'oscar'},
+    {type: 'perro', name: 'coraje', owner: 'oscar'}
+  ]
+}
+
 const server = http.createServer((req, res) => {
   const currentUrl = req.url
   const parseUrl = url.parse(currentUrl, true)
@@ -33,8 +43,8 @@ const server = http.createServer((req, res) => {
     }
 
     let handler
-    if (pathClean && router[pathClean]) {
-      handler = router[pathClean]
+    if (pathClean && router[pathClean] && router[pathClean][method]) {
+      handler = router[pathClean][method]
     }else{
       handler = router.noFound
     }
@@ -55,8 +65,13 @@ const router = {
   ruta: (data, callback) => {
     callback(200, {message: 'esta es /ruta'})
   },
-  usuarios: (data, callback) => {
-    callback(200, [{nombre: 'oscar'}, {nombre: 'camila'}])
+  mascotas: {
+    get: (data, callback) => {
+      callback(200, resources.mascotas)
+    },
+    post: (|data, callback) => {
+      callback(200, resources.mascotas)
+    }
   },
   noFound: (data, callback) => {
     callback(404, {message: 'no encontrado'})
