@@ -34,6 +34,10 @@ const server = http.createServer((req, res) => {
   req.on('end', ()=>{
     buffer += decoder.end()
 
+    if (headers["content-type"] === "application/json") {
+      buffer = JSON.parse(buffer)
+    }
+
     const data = {
       path: pathClean,
       query,
@@ -41,6 +45,8 @@ const server = http.createServer((req, res) => {
       headers,
       payload: buffer
     }
+
+    console.log({data})
 
     let handler
     if (pathClean && router[pathClean] && router[pathClean][method]) {
@@ -69,8 +75,9 @@ const router = {
     get: (data, callback) => {
       callback(200, resources.mascotas)
     },
-    post: (|data, callback) => {
-      callback(200, resources.mascotas)
+    post: (data, callback) => {
+      resources.mascotas.push(data.payload)
+      callback(201, data.payload)
     }
   },
   noFound: (data, callback) => {
