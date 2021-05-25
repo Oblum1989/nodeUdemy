@@ -8,7 +8,7 @@ let resources = {
     {type: 'perro', name: 'coraje', owner: 'oscar'},
     {type: 'perro', name: 'coraje', owner: 'oscar'},
     {type: 'perro', name: 'coraje', owner: 'oscar'},
-    {type: 'perro', name: 'coraje', owner: 'oscar'}
+    {type: 'perro', name: 'coraje', owner: 'manhuel'}
   ]
 }
 
@@ -38,8 +38,13 @@ const server = http.createServer((req, res) => {
       buffer = JSON.parse(buffer)
     }
 
+    if(pathClean.indexOf("/") > -1){
+      var [principalPath, indice] = pathClean.split('/')
+    }
+
     const data = {
-      path: pathClean,
+      indice,
+      path: principalPath || pathClean,
       query,
       method,
       headers,
@@ -49,8 +54,8 @@ const server = http.createServer((req, res) => {
     console.log({data})
 
     let handler
-    if (pathClean && router[pathClean] && router[pathClean][method]) {
-      handler = router[pathClean][method]
+    if (data.path && router[data.path] && router[data.path][method]) {
+      handler = router[data.path][method]
     }else{
       handler = router.noFound
     }
@@ -68,11 +73,17 @@ const server = http.createServer((req, res) => {
 });
 
 const router = {
-  ruta: (data, callback) => {
-    callback(200, {message: 'esta es /ruta'})
+  path: (data, callback) => {
+    callback(200, {message: 'esta es /path'})
   },
   mascotas: {
     get: (data, callback) => {
+      if (typeof data.indice !== "undefined") {
+        if(resources.mascotas[data.indice]){
+          return callback(200, resources.mascotas[data.indice])
+        }
+        return callback(404, {message: `mascota con indice ${data.indice} no encontrado`})
+      }
       callback(200, resources.mascotas)
     },
     post: (data, callback) => {
