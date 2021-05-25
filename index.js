@@ -1,8 +1,9 @@
 const http = require('http');
 const url = require('url');
 const { StringDecoder } = require('string_decoder');
+const router = require("./router")
 
-let resources = {
+global.resources = {
   mascotas: [
     {type: 'perro', name: 'coraje', owner: 'oscar'},
     {type: 'perro', name: 'coraje', owner: 'oscar'},
@@ -71,30 +72,6 @@ const server = http.createServer((req, res) => {
   })
 
 });
-
-const router = {
-  path: (data, callback) => {
-    callback(200, {message: 'esta es /path'})
-  },
-  mascotas: {
-    get: (data, callback) => {
-      if (typeof data.indice !== "undefined") {
-        if(resources.mascotas[data.indice]){
-          return callback(200, resources.mascotas[data.indice])
-        }
-        return callback(404, {message: `mascota con indice ${data.indice} no encontrado`})
-      }
-      callback(200, resources.mascotas)
-    },
-    post: (data, callback) => {
-      resources.mascotas.push(data.payload)
-      callback(201, data.payload)
-    }
-  },
-  noFound: (data, callback) => {
-    callback(404, {message: 'no encontrado'})
-  }
-}
 
 server.listen(5000, ()=>{
   console.log('el servidor ha sido montado')
