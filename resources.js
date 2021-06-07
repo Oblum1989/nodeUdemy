@@ -1,5 +1,5 @@
 module.exports = {
-  mascotas: [
+  pets: [
     {type: 'perro', name: 'coraje', owner: 'oscar'},
     {type: 'perro', name: 'coraje', owner: 'oscar'},
     {type: 'perro', name: 'coraje', owner: 'oscar'},
