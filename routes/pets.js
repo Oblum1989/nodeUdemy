@@ -6,7 +6,7 @@ module.exports = function petsHandler(pets) {
           return callback(200, pets[data.indice]);
         }
         return callback(404, {
-          message: `mascota con indice ${data.indice} no encontrado`,
+          message: `elemento con indice ${data.indice} no encontrado`,
         });
       }
       callback(200, pets);
@@ -22,7 +22,7 @@ module.exports = function petsHandler(pets) {
           return callback(200, pets[data.indice]);
         }
         return callback(404, {
-          message: `mascota con indice ${data.indice} no encontrado`,
+          message: `elemento con indice ${data.indice} no encontrado`,
         });
       }
       callback(400, { message: `indice no enviado` });
@@ -32,7 +32,7 @@ module.exports = function petsHandler(pets) {
         console.log("entre", data.indice)
         if (pets[data.indice]) {
           pets = pets.filter(
-            (_mascota, indice) => indice != data.indice
+            (_pet, indice) => indice != data.indice
           );
         }
         return callback(204, {
