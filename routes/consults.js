@@ -1,5 +1,5 @@
 module.exports = function consultsHandler(consults) {
-  return{
+  return {
     get: (data, callback) => {
       if (typeof data.indice !== "undefined") {
         if (consults[data.indice]) {
@@ -12,13 +12,21 @@ module.exports = function consultsHandler(consults) {
       callback(200, consults);
     },
     post: (data, callback) => {
-      consults.push(data.payload);
-      callback(201, data.payload);
+      let newConsult = data.payload;
+      newConsult.created_at = new Date();
+      newConsult.updated_at = null;
+      consults = [...consults, newConsult];
+      return callback(201, newConsult);
     },
     put: (data, callback) => {
       if (typeof data.indice !== "undefined") {
         if (consults[data.indice]) {
-          consults[data.indice] = data.payload;
+          const {created_at} = consults[data.indice]
+          consults[data.indice] = {
+            ...data.payload,
+            created_at,
+            updated_at: new Date()
+          };
           return callback(200, consults[data.indice]);
         }
         return callback(404, {
@@ -29,7 +37,7 @@ module.exports = function consultsHandler(consults) {
     },
     delete: (data, callback) => {
       if (typeof data.indice !== "undefined") {
-        console.log("entre", data.indice)
+        console.log("entre", data.indice);
         if (consults[data.indice]) {
           consults = consults.filter(
             (_consult, indice) => indice != data.indice
@@ -41,5 +49,5 @@ module.exports = function consultsHandler(consults) {
       }
       callback(400, { message: `indice no enviado` });
     },
-  }
-}
+  };
+};

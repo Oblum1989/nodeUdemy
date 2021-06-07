@@ -12,13 +12,21 @@ module.exports = function ownersHandler(owners) {
       callback(200, owners);
     },
     post: (data, callback) => {
-      owners.push(data.payload);
-      callback(201, data.payload);
+      let newOwner = data.payload;
+      newOwner.created_at = new Date();
+      newOwner.updated_at = null;
+      owners = [...owners, newOwner];
+      return callback(201, newOwner);
     },
     put: (data, callback) => {
       if (typeof data.indice !== "undefined") {
         if (owners[data.indice]) {
-          owners[data.indice] = data.payload;
+          const {created_at} = owners[data.indice]
+          owners[data.indice] = {
+            ...data.payload,
+            created_at,
+            updated_at: new Date()
+          };
           return callback(200, owners[data.indice]);
         }
         return callback(404, {

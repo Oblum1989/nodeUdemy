@@ -12,13 +12,21 @@ module.exports = function petsHandler(pets) {
       callback(200, pets);
     },
     post: (data, callback) => {
-      pets.push(data.payload);
-      callback(201, data.payload);
+      let newPet = data.payload;
+      newPet.created_at = new Date();
+      newPet.updated_at = null;
+      pets = [...pets, newPet];
+      return callback(201, newPet);
     },
     put: (data, callback) => {
       if (typeof data.indice !== "undefined") {
         if (pets[data.indice]) {
-          pets[data.indice] = data.payload;
+          const {created_at} = pets[data.indice]
+          pets[data.indice] = {
+            ...data.payload,
+            created_at,
+            updated_at: new Date()
+          };
           return callback(200, pets[data.indice]);
         }
         return callback(404, {

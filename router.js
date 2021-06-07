@@ -9,9 +9,9 @@ module.exports = {
     callback(200, { message: "esta es /path" });
   },
   pets: pets(resources.pets),
-  owners: pets(resources.owners),
-  veterinarians: pets(resources.veterinarians),
-  consults: pets(resources.consults),
+  owners: owners(resources.owners),
+  veterinarians: veterinarians(resources.veterinarians),
+  consults: consults(resources.consults),
   noFound: (data, callback) => {
     callback(404, { message: "no encontrado" });
   },
